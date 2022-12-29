@@ -1,19 +1,15 @@
-import { useState, useReducer } from 'react';
+import { useState, useReducer, useEffect } from 'react';
 import reducer from './expensesReducer';
+import request from './request';
+import Expense from './expense.js'
 import './index.css'
-
-class Expense {
-  constructor(id, description, amount) {
-    this.id = id
-    this.description = description
-    this.amount = amount
-  }
-}
 
 function App() {
   const [expenses, dispatch] = useReducer(reducer, []);
   const [expenseDescription, setExpenseDescription] = useState('')
   const [expenseAmount, setExpenseAmount] = useState(0)
+
+  useEffect(() => { request('expenses', dispatch); }, []);
   
   function addExpense(e) {
     e.preventDefault();
@@ -48,7 +44,7 @@ function App() {
             name="amount"
             type="number"
             className="border-2 rounded-md px-2 mx-2"
-            onChange={ (e) => setExpenseAmount(parseFloat(e.target.value)) }
+            onChange={ (e) => setExpenseAmount(parseFloat(e.target.value).toString()) }
             value={expenseAmount}
           />
           <button className="bg-blue-400 hover:bg-blue-500 px-3 py-1 ml-2 border rounded-md">
